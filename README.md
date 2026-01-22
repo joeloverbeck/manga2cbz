@@ -10,6 +10,7 @@ Convert manga chapter folders into CBZ archives for VR reading applications.
 
 **Key features:**
 
+- **Automatic WebP conversion** - Converts WebP images to PNG for VR reader compatibility
 - **Natural sort ordering** - Pages sort correctly: `page2` comes before `page10`
 - **Flat and recursive discovery** - Process simple or nested chapter structures
 - **Memory efficient** - Streams files directly without loading entire images into memory
@@ -67,6 +68,7 @@ Options:
   -e, --ext <EXTS>    Comma-separated image extensions (default: jpg,jpeg,png,gif,bmp,webp)
   -f, --force         Overwrite existing CBZ files
   -r, --recursive     Process nested directory structures
+  -n, --no-convert    Disable WebP to PNG conversion (WebP converted by default)
   -v, --verbose       Show detailed progress
   -q, --quiet         Suppress non-error output (-q takes precedence over -v)
   -h, --help          Show help message
@@ -193,6 +195,31 @@ Created: /manga/OnePiece/Chapter003.cbz (20 images)
 - CBZ filename matches chapter directory name
 - In recursive mode, nested paths use underscores: `Volume01/Chapter001` becomes `Volume01_Chapter001.cbz`
 - Images stored at the archive root (no nested folders inside CBZ)
+
+## WebP Compatibility
+
+Many VR reader applications don't support WebP images in CBZ files, resulting in black pages. To ensure maximum compatibility, manga2cbz **automatically converts WebP images to PNG format** during CBZ creation.
+
+### Why PNG?
+
+| Format | Pros | Cons |
+|--------|------|------|
+| **PNG** | Lossless, preserves quality, supports transparency | Larger file size |
+| **JPEG** | Smaller file size | Lossy compression, no transparency |
+
+PNG is chosen because manga artwork benefits from lossless compression, and transparency support is important for some manga pages.
+
+### Disabling Conversion
+
+If you want to keep WebP files as-is (e.g., your reader supports WebP), use the `--no-convert` or `-n` flag:
+
+```bash
+# Disable WebP conversion
+./manga2cbz --no-convert /path/to/manga
+
+# Short form
+./manga2cbz -n /path/to/manga
+```
 
 ## Technical Details
 
